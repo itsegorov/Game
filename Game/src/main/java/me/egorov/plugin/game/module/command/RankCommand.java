@@ -24,6 +24,7 @@ public class RankCommand extends AbstractCommand {
     public LiteralArgumentBuilder<CommandSourceStack> build() {
         return withStandardRequirements(LiteralArgumentBuilder.<CommandSourceStack>literal(getName())
 
+                // /rank
                 .executes(context -> {
                     if (getOptionalPlayer(context).isEmpty()) {
                         return 0;
@@ -43,7 +44,9 @@ public class RankCommand extends AbstractCommand {
                     return 1;
                 })
 
+                // /rank set
                 .then(literal("set")
+                        // /rank set <rank>
                         .then(RequiredArgumentBuilder.<CommandSourceStack, String>argument("ранг", StringArgumentType.word())
                                 .suggests(this::suggestRanks)
                                 .executes(context -> {
@@ -68,8 +71,9 @@ public class RankCommand extends AbstractCommand {
                                 })
                         )
                 )
-
+                // /rank remove
                 .then(literal("remove")
+                        // /rank remove <rank>
                         .then(RequiredArgumentBuilder.<CommandSourceStack, String>argument("ранг", StringArgumentType.word())
                                 .suggests(this::suggestRanks)
                                 .executes(context -> {

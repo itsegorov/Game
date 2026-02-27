@@ -30,7 +30,7 @@ public class PlayerBalanceRepositoryImpl implements PlayerBalanceRepository {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, balance.player().uuid().toString());
-            statement.setString(2, balance.currency().name());
+            statement.setString(2, balance.currency().getId());
             statement.setDouble(3, balance.value());
             statement.setDouble(4, balance.value());
             statement.executeUpdate();
@@ -49,7 +49,7 @@ public class PlayerBalanceRepositoryImpl implements PlayerBalanceRepository {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, player.uuid().toString());
-            statement.setString(2, currency.name());
+            statement.setString(2, currency.getId());
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {

@@ -50,6 +50,7 @@ me\egorov\plugin\library\rank\entity\PlayerRank.class
 me\egorov\plugin\library\inventory\listener\MenuListener.class
 me\egorov\plugin\library\inventory\animation\OpenAnimation$9.class
 me\egorov\plugin\library\inventory\builder\impl\MenuBuilderImpl.class
+me\egorov\plugin\game\module\command\EconomyCommand.class
 me\egorov\plugin\library\inventory\animation\OpenAnimation$1$1.class
 me\egorov\plugin\library\inventory\animation\OpenAnimation$3.class
 me\egorov\plugin\library\economy\Economy.class

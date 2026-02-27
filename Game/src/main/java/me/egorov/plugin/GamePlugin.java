@@ -52,6 +52,7 @@ public class GamePlugin extends JavaPlugin {
         commandRegistrar = new CommandRegistrar(this, rankService);
         commandRegistrar.register(
                 new GameModeCommand(),
+                new EconomyCommand(economy.service()),
                 new RankCommand()
         );
         commandRegistrar.registerAll();
