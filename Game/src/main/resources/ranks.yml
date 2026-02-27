@@ -1,0 +1,14 @@
+Database:
+  # mysql или sqlite
+  Type: "sqlite"
+  Pool Size: 10
+
+  MySQL:
+    Host: "localhost"
+    Port: "3306"
+    Database: "minecraft"
+    Username: "root"
+    Password: ""
+
+  SQLite:
+    File: "ranks.db"

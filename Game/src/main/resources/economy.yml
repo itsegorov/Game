@@ -1,0 +1,7 @@
+Connection:
+  Host: "localhost"
+  Username: "root"
+  Password: ""
+  Database: "minecraft"
+  Port: "3306"
+  Pool Size: 5
