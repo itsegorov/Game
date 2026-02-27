@@ -20,38 +20,47 @@ public class PlayerBalanceRepositoryImpl implements PlayerBalanceRepository {
     public PlayerBalanceRepositoryImpl(HikariConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }
-    
+
     @Override
     public void save(@NotNull PlayerBalance balance) {
-        try (Connection connection = connectionPool.connection();
-             PreparedStatement statement = connection.prepareStatement(
-                 "INSERT INTO economy_balances (player_uuid, currency, balance) VALUES (?, ?, ?) " +
-                     "ON DUPLICATE KEY UPDATE balance = ?")) {
+        String sql = "INSERT INTO economy_balances (player_uuid, currency, balance) VALUES (?, ?, ?) " +
+                "ON CONFLICT(player_uuid, currency) DO UPDATE SET balance = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, balance.player().uuid().toString());
             statement.setString(2, balance.currency().name());
             statement.setDouble(3, balance.value());
             statement.setDouble(4, balance.value());
             statement.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException("Failed to save player balance", e);
         }
     }
-    
+
     @Override
     public @NotNull Optional<PlayerBalance> findByPlayerAndCurrency(@NotNull EconomyPlayer player,
                                                                     @NotNull Currency currency) {
-        try (Connection connection = connectionPool.connection();
-             PreparedStatement statement = connection.prepareStatement(
-                 "SELECT balance FROM economy_balances WHERE player_uuid = ? AND currency = ?")) {
+        String sql = "SELECT balance FROM economy_balances WHERE player_uuid = ? AND currency = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, player.uuid().toString());
             statement.setString(2, currency.name());
             ResultSet resultSet = statement.executeQuery();
-            
+
             if (resultSet.next()) {
                 double amount = resultSet.getDouble("balance");
                 return Optional.of(new PlayerBalance(player, currency, amount));
             }
-            return Optional.empty();
+
+            PlayerBalance newBalance = new PlayerBalance(player, currency, 0.0);
+            save(newBalance);
+            return Optional.of(newBalance);
+
         } catch (SQLException exception) {
             throw new RuntimeException("Failed to find player balance", exception);
         }

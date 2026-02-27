@@ -90,7 +90,6 @@ me\egorov\plugin\library\database\HikariConnectionPool$AbstractPoolFactory.class
 me\egorov\plugin\library\command\argument\ArgumentTypes$PlayerArgumentType.class
 me\egorov\plugin\library\command\decorator\ConfirmationDecorator$PendingCommand.class
 me\egorov\plugin\library\command\decorator\CommandDecorator.class
-me\egorov\plugin\library\rank\Ranks$DatabaseType.class
 me\egorov\plugin\library\inventory\animation\OpenAnimation$3$1.class
 me\egorov\plugin\library\command\decorator\AsyncDecorator.class
 me\egorov\plugin\library\inventory\animation\OpenAnimation$10.class

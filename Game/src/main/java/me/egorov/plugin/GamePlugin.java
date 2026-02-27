@@ -27,6 +27,10 @@ public class GamePlugin extends JavaPlugin {
 
     private Economy economy;
 
+    // sender.sendMessage("[Служебное сообщение] Такого игрока нет! (OfflinePlayer#" + targetName + ")");
+    // sender.sendMessage("[Служебное сообщение] Успешно! (OfflinePlayer#" + targetName + ", IncrementBalance=" + type + ", Value=" + value + ")");
+    // sender.sendMessage("[Служебное сообщение] Успешно! (OfflinePlayer#" + targetName + ", DecrementBalance=" + type + ", Value=" + value + ")");
+
     @Override
     public void onEnable() {
         instance = this;
