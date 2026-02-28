@@ -43,14 +43,14 @@ public class RanksPlayerListener implements Listener {
         rankService.invalidateCache(event.getPlayer().getUniqueId());
     }
 
-    // TODO: Переделать в ChatListener
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-
-        rankService.get(player.getUniqueId()).ifPresent(rank -> {
-            String format = rank.rank().prefix() + " %s§f: %s";
-            event.setFormat(format);
-        });
-    }
+    //// TODO: Переделать в ChatListener
+    //        @EventHandler(priority = EventPriority.LOWEST)
+    //public void onPlayerChat(AsyncPlayerChatEvent event) {
+    //        Player player = event.getPlayer();
+    //
+    //        rankService.get(player.getUniqueId()).ifPresent(rank -> {
+    //                String format = rank.rank().prefix() + " %s§f: %s";
+    //                event.setFormat(format);
+    //            });
+    //    }
 }

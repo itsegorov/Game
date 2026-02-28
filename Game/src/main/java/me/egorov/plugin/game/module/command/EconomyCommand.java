@@ -19,7 +19,7 @@ public class EconomyCommand extends AbstractCommand {
     private final EconomyService economyService;
 
     public EconomyCommand(EconomyService economyService) {
-        super("money", "Тестовая команда валюты", "eco, balance, bal");
+        super("money", "Тестовая команда валюты", "eco", "balance", "bal");
         this.economyService = economyService;
     }
 

@@ -53,7 +53,7 @@ public class ChatListener implements Listener {
         Component component = Component.text("")
                 .append(Component.text("▎")
                         .decorate(TextDecoration.BOLD)
-                        .color(TextColor.color(255, 255, 255)))
+                        .color(TextColor.color(0, 255, 0)))
                 .appendSpace();
 
         Optional<String> prefixOpt = Optional.empty();
@@ -73,6 +73,7 @@ public class ChatListener implements Listener {
                 .append(Component.text("→").color(TextColor.color(85, 85, 85)))
                 .appendSpace()
                 .append(Component.text(preventMessage(player, event.getMessage())));
+
 
         for (Player recipient : event.getRecipients()) {
             recipient.sendMessage(component);

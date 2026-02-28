@@ -9,6 +9,9 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.egorov.plugin.library.command.commander.AbstractCommand;
 import me.egorov.plugin.library.rank.model.Rank;
+import me.egorov.plugin.utility.StringUtility;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -40,7 +43,7 @@ public class RankCommand extends AbstractCommand {
 
                     Rank rank = playerRank.get();
 
-                    success(context, rank.name() + " - " + rank.prefix());
+                    success(context, rank.name() + " - " + StringUtility.parseString(rank.prefix()));
                     return 1;
                 })
 
@@ -71,6 +74,21 @@ public class RankCommand extends AbstractCommand {
                                 })
                         )
                 )
+
+                // /rank list
+                .then(literal("list")
+                        .executes(context -> {
+
+                            for (Rank rank : Rank.values()) {
+                                Component prefix = StringUtility.parseString(rank.prefix());
+
+                                sendMessage(context, prefix);
+
+                            }
+                            return 1;
+                        })
+                )
+
                 // /rank remove
                 .then(literal("remove")
                         // /rank remove <rank>
