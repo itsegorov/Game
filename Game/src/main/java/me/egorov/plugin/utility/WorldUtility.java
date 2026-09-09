@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class WorldUtility {
 
     public static long chunkKey(@NotNull Location location) {

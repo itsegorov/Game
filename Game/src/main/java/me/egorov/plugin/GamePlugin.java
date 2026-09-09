@@ -6,9 +6,6 @@ import me.egorov.plugin.library.command.registrar.CommandRegistrar;
 import me.egorov.plugin.library.configuration.Messages;
 import me.egorov.plugin.library.economy.Economy;
 import me.egorov.plugin.library.economy.listener.EconomyPlayerListener;
-import me.egorov.plugin.library.inventory.listener.MenuListener;
-import me.egorov.plugin.library.inventory.session.MenuSession;
-import me.egorov.plugin.library.inventory.session.PaginatedSession;
 import me.egorov.plugin.library.rank.Ranks;
 import me.egorov.plugin.library.rank.listener.RanksPlayerListener;
 import me.egorov.plugin.library.rank.service.PlayerRankService;
@@ -27,10 +24,6 @@ public class GamePlugin extends JavaPlugin {
 
     private Economy economy;
 
-    // sender.sendMessage("[Служебное сообщение] Такого игрока нет! (OfflinePlayer#" + targetName + ")");
-    // sender.sendMessage("[Служебное сообщение] Успешно! (OfflinePlayer#" + targetName + ", IncrementBalance=" + type + ", Value=" + value + ")");
-    // sender.sendMessage("[Служебное сообщение] Успешно! (OfflinePlayer#" + targetName + ", DecrementBalance=" + type + ", Value=" + value + ")");
-
     @Override
     public void onEnable() {
         instance = this;
@@ -44,7 +37,6 @@ public class GamePlugin extends JavaPlugin {
 
         messages = new Messages(getConfig().getConfigurationSection("Messages"));
 
-        getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(rankManager), this);
         getServer().getPluginManager().registerEvents(new RanksPlayerListener(ranks.service()), this);
         getServer().getPluginManager().registerEvents(new EconomyPlayerListener(economy.service()), this);
@@ -69,8 +61,6 @@ public class GamePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        MenuSession.clearAll();
-        PaginatedSession.clearAll();
         if (ranks != null) {
             ranks.shutdown();
         }

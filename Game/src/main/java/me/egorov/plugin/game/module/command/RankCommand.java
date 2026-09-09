@@ -43,7 +43,7 @@ public class RankCommand extends AbstractCommand {
 
                     Rank rank = playerRank.get();
 
-                    success(context, rank.name() + " - " + StringUtility.parseString(rank.prefix()));
+                    sendMessage(context, rank.name() + " - " + rank.prefix());
                     return 1;
                 })
 

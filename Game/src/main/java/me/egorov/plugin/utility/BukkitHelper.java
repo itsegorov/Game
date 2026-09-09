@@ -1,6 +1,7 @@
 package me.egorov.plugin.utility;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -72,8 +73,34 @@ public class BukkitHelper {
 
     public static void checkInventorySize(int size) {
         if (size < 9 || size > 54) {
-            throw new IllegalStateException("Размер инвентаря типа Chest не может быть меньше 9 и больше 54");
+            throw new IllegalStateException("Размер инвентаря не может быть меньше 9 и больше 54");
         }
+    }
+
+    public static class Text {
+
+        public static boolean isEmpty(Component parent) {
+            if (parent instanceof TextComponent textParent) {
+                if (!textParent.content().isEmpty()) {
+                    return false;
+                }
+
+                for (Component child : textParent.children()) {
+                    if (child instanceof TextComponent textChild) {
+                        if (!textChild.content().isEmpty()) {
+                            return false;
+                        }
+                    }
+
+                    if (!isEmpty(child)) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
     }
 
 }

@@ -1,36 +1,19 @@
-# Настройки таба
-groups:
-  sradmin:
-    prefix: "&4[Гл.Админ] &f"
-    suffix: ""
-  curator:
-    prefix: "&d[Куратор] &f"
-    suffix: ""
-  admin:
-    prefix: "&c[Админ] &f"
-    suffix: ""
-  default:
-    prefix: "&7[Игрок] &f"
-    suffix: ""
-
-tab-settings:
-  enabled: true
-  update-interval: 20  # тиков (1 секунда)
-  player-format: "@prefix @player @suffix"
-
-  header:
-    - ""
-    - "&l&b▪ &#0300FFF&#1D1AFCo&#3834F8u&#524EF5r&#6D68F1C&#8782EEu&#A29CEAb&#BCB6E7e &b▪"
-    - "&eРежим: &dБоксовое ПВП"
-    - "&eОнлайн режима: &d@online"
-    - ""
-
-  footer:
-    - "  "
-    - "&fТелеграм: &et.me/FourCube"
-    - "&fСайт: &efourcube.ru"
-    - "&fVK: &evk.com/fourcube"
-    - "&fDiscord: &eds.gg"
+Settings:
+  Tab:
+    Enabled: true
+    Update Interval: 20
+    Header:
+      - ""
+      - "&l&b▪ &#0300FFF&#1D1AFCo&#3834F8u&#524EF5r&#6D68F1C&#8782EEu&#A29CEAb&#BCB6E7e &b▪"
+      - "&eРежим: &dБоксовое ПВП"
+      - "&eОнлайн режима: &d@online"
+      - ""
+    Footer:
+      - "  "
+      - "&fТелеграм: &et.me/FourCube"
+      - "&fСайт: &efourcube.ru"
+      - "&fVK: &evk.com/fourcube"
+      - "&fDiscord: &eds.gg"
 
 # Настройки скорборда
 scoreboard:

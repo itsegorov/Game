@@ -91,8 +91,8 @@ public class ChatListener implements Listener {
         matcher.reset();
 
         Set<String> allowedDomains = Set.of(
-                "fourcube.ru",
-                "fourcube.su"
+                "google.com",
+                "youtube.com"
         );
 
         boolean canBypass = false;

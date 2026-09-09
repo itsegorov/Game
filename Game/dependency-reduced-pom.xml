@@ -47,6 +47,12 @@
   </repositories>
   <dependencies>
     <dependency>
+      <groupId>com.github.retrooper</groupId>
+      <artifactId>packetevents-spigot</artifactId>
+      <version>2.11.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>net.luckperms</groupId>
       <artifactId>api</artifactId>
       <version>5.4</version>
@@ -57,105 +63,105 @@
       <artifactId>paper-api</artifactId>
       <version>1.21.1-R0.1-SNAPSHOTT</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/versions/1.21.1/paper-1.21.1.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/versions/1.21.1/paper-1.21.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-bukkit-api</artifactId>
       <version>1.21.1-R0.1-SNAPSHOTT</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/com/destroystokyo/paper/paper-mojangapi/1.21.1-R0.1-SNAPSHOT/paper-mojangapi-1.21.1-R0.1-SNAPSHOT.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/com/destroystokyo/paper/paper-mojangapi/1.21.1-R0.1-SNAPSHOT/paper-mojangapi-1.21.1-R0.1-SNAPSHOT.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>2.0.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-api</artifactId>
       <version>4.17.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/adventure-api/4.17.0/adventure-api-4.17.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/adventure-api/4.17.0/adventure-api-4.17.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-api-logger</artifactId>
       <version>4.17.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/adventure-text-logger-slf4j/4.17.0/adventure-text-logger-slf4j-4.17.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/adventure-text-logger-slf4j/4.17.0/adventure-text-logger-slf4j-4.17.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-api-key</artifactId>
       <version>4.17.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/adventure-key/4.17.0/adventure-key-4.17.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/adventure-key/4.17.0/adventure-key-4.17.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-text-serializer-plain</artifactId>
       <version>4.17.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/adventure-text-serializer-plain/4.17.0/adventure-text-serializer-plain-4.17.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/adventure-text-serializer-plain/4.17.0/adventure-text-serializer-plain-4.17.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-api-minimessage</artifactId>
       <version>4.17.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/adventure-text-minimessage/4.17.0/adventure-text-minimessage-4.17.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/adventure-text-minimessage/4.17.0/adventure-text-minimessage-4.17.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-text-serializer-legacy</artifactId>
       <version>4.17.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/adventure-text-serializer-legacy/4.17.0/adventure-text-serializer-legacy-4.17.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/adventure-text-serializer-legacy/4.17.0/adventure-text-serializer-legacy-4.17.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>examination-api</artifactId>
       <version>1.3.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/examination-api/1.3.0/examination-api-1.3.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/examination-api/1.3.0/examination-api-1.3.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>examination-string</artifactId>
       <version>1.3.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/kyori/examination-string/1.3.0/examination-string-1.3.0.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/kyori/examination-string/1.3.0/examination-string-1.3.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.joml</groupId>
       <artifactId>api</artifactId>
       <version>1.3.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/org/joml/joml/1.10.5/joml-1.10.5.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/org/joml/joml/1.10.5/joml-1.10.5.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.google</groupId>
       <artifactId>guava</artifactId>
       <version>32.1.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.google</groupId>
       <artifactId>gson</artifactId>
       <version>32.1.1</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.mojang</groupId>
       <artifactId>brigadier</artifactId>
       <version>1.21.1-R0.1-SNAPSHOTT</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/com/mojang/brigadier/1.3.10/brigadier-1.3.10.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/com/mojang/brigadier/1.3.10/brigadier-1.3.10.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -168,21 +174,21 @@
       <artifactId>authlib-1</artifactId>
       <version>1.21.1-R0.1-SNAPSHOTT</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/com/mojang/authlib/6.0.54/authlib-6.0.54.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/com/mojang/authlib/6.0.54/authlib-6.0.54.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.md_5</groupId>
       <artifactId>bungee-api-chat</artifactId>
       <version>1.20-R0.2</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/net/md-5/bungeecord-chat/1.20-R0.2-deprecated+build.18/bungeecord-chat-1.20-R0.2-deprecated+build.18.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/net/md-5/bungeecord-chat/1.20-R0.2-deprecated+build.18/bungeecord-chat-1.20-R0.2-deprecated+build.18.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>it.unimi</groupId>
       <artifactId>fastutil</artifactId>
       <version>8.5.12</version>
       <scope>system</scope>
-      <systemPath>C:/Users/egoro/Desktop/Main Project/server/libraries/it/unimi/dsi/fastutil/8.5.12/fastutil-8.5.12.jar</systemPath>
+      <systemPath>C:/Users/Egorov/Desktop/Чистые сборки для тестов/Paper/1.21.1/libraries/it/unimi/dsi/fastutil/8.5.12/fastutil-8.5.12.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>

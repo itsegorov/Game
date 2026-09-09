@@ -44,7 +44,7 @@ public class RanksPlayerListener implements Listener {
     }
 
     //// TODO: Переделать в ChatListener
-    //        @EventHandler(priority = EventPriority.LOWEST)
+    //@EventHandler(priority = EventPriority.LOWEST)
     //public void onPlayerChat(AsyncPlayerChatEvent event) {
     //        Player player = event.getPlayer();
     //
