@@ -53,7 +53,7 @@ public class ChatListener implements Listener {
         Component component = Component.text("")
                 .append(Component.text("▎")
                         .decorate(TextDecoration.BOLD)
-                        .color(TextColor.color(255, 255, 255)))
+                        .color(TextColor.color(0, 255, 0)))
                 .appendSpace();
 
         Optional<String> prefixOpt = Optional.empty();
@@ -74,6 +74,7 @@ public class ChatListener implements Listener {
                 .appendSpace()
                 .append(Component.text(preventMessage(player, event.getMessage())));
 
+
         for (Player recipient : event.getRecipients()) {
             recipient.sendMessage(component);
         }
@@ -90,8 +91,8 @@ public class ChatListener implements Listener {
         matcher.reset();
 
         Set<String> allowedDomains = Set.of(
-                "fourcube.ru",
-                "fourcube.su"
+                "google.com",
+                "youtube.com"
         );
 
         boolean canBypass = false;

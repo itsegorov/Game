@@ -2,7 +2,7 @@ package me.egorov.plugin.library.economy;
 
 import me.egorov.plugin.library.configuration.SimpleConfiguration;
 import me.egorov.plugin.library.database.HikariConnectionPool;
-import me.egorov.plugin.library.database.type.MySQLConnectionPool;
+import me.egorov.plugin.library.database.type.SQLiteConnectionPool;
 import me.egorov.plugin.library.economy.repository.EconomyPlayerRepository;
 import me.egorov.plugin.library.economy.repository.PlayerBalanceRepository;
 import me.egorov.plugin.library.economy.repository.impl.EconomyPlayerRepositoryImpl;
@@ -24,7 +24,7 @@ public class Economy {
 
         SimpleConfiguration economyConfig = new SimpleConfiguration(plugin, "economy.yml");
 
-        this.connectionPool = createConnectionPool(economyConfig);
+        this.connectionPool = createConnectionPool(plugin, economyConfig);
         this.economyService = createEconomyService();
     }
 
@@ -39,21 +39,14 @@ public class Economy {
         return new EconomyServiceImpl(playerRepository, balanceRepository);
     }
 
-    private HikariConnectionPool createConnectionPool(SimpleConfiguration economyConfig) {
-        String host = economyConfig.getString("Connection.Host", "localhost");
-        String port = economyConfig.getString("Connection.Port", "3306");
-        String database = economyConfig.getString("Connection.Database", "minecraft");
-        String user = economyConfig.getString("Connection.Username", "root");
-        String password = economyConfig.getString("Connection.Password", "");
-        int poolSize = economyConfig.getInt("Connection.Pool Size", 5);
+    private HikariConnectionPool createConnectionPool(JavaPlugin plugin, SimpleConfiguration economyConfig) {
+        int poolSize = economyConfig.getInt("Database.Pool Size", 5);
 
-        return new MySQLConnectionPool.Factory()
-                .hostname(host)
-                .port(port)
-                .database(database)
-                .username(user)
-                .password(password)
-                .maxPoolsSize(poolSize)
+        return new SQLiteConnectionPool.Factory()
+                .setMaxPoolsSize(poolSize)
+                .addProperty("foreign_keys", "true")
+                .addProperty("synchronous", "NORMAL")
+                .addProperty("journal_mode", "WAL")
                 .build();
     }
 

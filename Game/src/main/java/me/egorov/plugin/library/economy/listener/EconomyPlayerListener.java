@@ -7,8 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.Optional;
-
 public class EconomyPlayerListener implements Listener {
 
     private final EconomyService economyService;
@@ -21,11 +19,11 @@ public class EconomyPlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        Optional<EconomyPlayer> optionalPlayer = economyService.find(player.getUniqueId());
-
-        if (optionalPlayer.isEmpty()) {
-            EconomyPlayer economyPlayer = new EconomyPlayer(player.getUniqueId(), player.getName());
-            economyService.createAccount(economyPlayer);
-        }
+        economyService.find(player.getUniqueId()).thenAccept(optionalPlayer -> {
+            if (optionalPlayer.isEmpty()) {
+                EconomyPlayer economyPlayer = new EconomyPlayer(player.getUniqueId(), player.getName());
+                economyService.createAccount(economyPlayer);
+            }
+        });
     }
 }

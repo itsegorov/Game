@@ -14,6 +14,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.egorov.plugin.library.command.cooldown.CooldownManager;
 import me.egorov.plugin.library.command.decorator.CommandDecorator;
+import me.egorov.plugin.library.economy.model.Currency;
 import me.egorov.plugin.library.rank.model.Rank;
 import me.egorov.plugin.library.rank.wrapper.RankManagerWrapper;
 import net.kyori.adventure.text.Component;
@@ -44,6 +45,11 @@ public abstract class AbstractCommand implements CommanderCommand {
     protected long cooldownSeconds = 0;
     protected String permission;
     protected boolean playerOnly = false;
+
+    public static final List<Currency> currencies = List.of(
+            new Currency("money", "$", "Обычная валюта"),
+            new Currency("donate", "^", "Донатная валюта")
+    );
 
     protected static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
 
@@ -347,6 +353,17 @@ public abstract class AbstractCommand implements CommanderCommand {
             Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
                     .filter(name -> name.toLowerCase().startsWith(builder.getRemaining().toLowerCase()))
+                    .forEach(builder::suggest);
+            return builder.buildFuture();
+        };
+    }
+
+    protected SuggestionProvider<CommandSourceStack> suggestCurrencies() {
+        return (ctx, builder) -> {
+            String partial = builder.getRemaining().toLowerCase();
+            currencies.stream()
+                    .map(Currency::getId)
+                    .filter(id -> id.startsWith(partial))
                     .forEach(builder::suggest);
             return builder.buildFuture();
         };

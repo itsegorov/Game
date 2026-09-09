@@ -19,12 +19,6 @@ public class Ranks {
 
     private final HikariConnectionPool connectionPool;
     private final PlayerRankService playerRankService;
-    private final DatabaseType databaseType;
-
-    public enum DatabaseType {
-        MYSQL,
-        SQLITE
-    }
 
     public Ranks(@NotNull JavaPlugin plugin) {
         Objects.requireNonNull(plugin, "Plugin cannot be null");
@@ -33,52 +27,20 @@ public class Ranks {
 
         SimpleConfiguration rankConfig = new SimpleConfiguration(plugin, "ranks.yml");
 
-        String dbType = rankConfig.getString("Database.Type", "mysql").toUpperCase();
-        this.databaseType = DatabaseType.valueOf(dbType);
-
         this.connectionPool = createConnectionPool(rankConfig);
         this.playerRankService = createPlayerRankService();
-
     }
 
     private HikariConnectionPool createConnectionPool(SimpleConfiguration rankConfig) {
         int poolSize = rankConfig.getInt("Database.Pool Size", 10);
 
-        switch (databaseType) {
-            case MYSQL:
-                String host = rankConfig.getString("Database.MySQL.Host", "localhost");
-                String port = rankConfig.getString("Database.MySQL.Port", "3306");
-                String database = rankConfig.getString("Database.MySQL.Database", "minecraft");
-                String user = rankConfig.getString("Database.MySQL.Username", "root");
-                String password = rankConfig.getString("Database.MySQL.Password", "");
-
-                return new MySQLConnectionPool.Factory()
-                        .hostname(host)
-                        .port(port)
-                        .database(database)
-                        .username(user)
-                        .password(password)
-                        .setMaxPoolsSize(poolSize)
-                        .addProperty("useUnicode", "true")
-                        .addProperty("characterEncoding", "utf8")
-                        .addProperty("useSSL", "false")
-                        .addProperty("autoReconnect", "true")
-                        .build();
-
-            case SQLITE:
-                String dbPath = rankConfig.getString("Database.SQLite.File", "ranks.db");
-
-                return new SQLiteConnectionPool.Factory()
-                        .database(plugin.getDataFolder().getAbsolutePath() + "/" + dbPath)
-                        .setMaxPoolsSize(poolSize)
-                        .addProperty("foreign_keys", "true")
-                        .addProperty("synchronous", "NORMAL")
-                        .addProperty("journal_mode", "WAL")
-                        .build();
-
-            default:
-                throw new IllegalArgumentException("Unsupported database type: " + databaseType);
-        }
+        return new SQLiteConnectionPool.Factory()
+                .setMaxPoolsSize(poolSize)
+                .addProperty("foreign_keys", "true")
+                .addProperty("synchronous", "NORMAL")
+                .addProperty("journal_mode", "WAL")
+                .addProperty("busy_timeout", "5000")
+                .build();
     }
 
     private PlayerRankService createPlayerRankService() {
@@ -88,10 +50,6 @@ public class Ranks {
 
     public @NotNull PlayerRankService service() {
         return playerRankService;
-    }
-
-    public @NotNull DatabaseType getDatabaseType() {
-        return databaseType;
     }
 
     public void shutdown() {

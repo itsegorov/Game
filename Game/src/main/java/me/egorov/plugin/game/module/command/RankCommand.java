@@ -9,6 +9,9 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.egorov.plugin.library.command.commander.AbstractCommand;
 import me.egorov.plugin.library.rank.model.Rank;
+import me.egorov.plugin.utility.StringUtility;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -24,6 +27,7 @@ public class RankCommand extends AbstractCommand {
     public LiteralArgumentBuilder<CommandSourceStack> build() {
         return withStandardRequirements(LiteralArgumentBuilder.<CommandSourceStack>literal(getName())
 
+                // /rank
                 .executes(context -> {
                     if (getOptionalPlayer(context).isEmpty()) {
                         return 0;
@@ -39,11 +43,13 @@ public class RankCommand extends AbstractCommand {
 
                     Rank rank = playerRank.get();
 
-                    success(context, rank.name() + " - " + rank.prefix());
+                    sendMessage(context, rank.name() + " - " + rank.prefix());
                     return 1;
                 })
 
+                // /rank set
                 .then(literal("set")
+                        // /rank set <rank>
                         .then(RequiredArgumentBuilder.<CommandSourceStack, String>argument("ранг", StringArgumentType.word())
                                 .suggests(this::suggestRanks)
                                 .executes(context -> {
@@ -69,7 +75,23 @@ public class RankCommand extends AbstractCommand {
                         )
                 )
 
+                // /rank list
+                .then(literal("list")
+                        .executes(context -> {
+
+                            for (Rank rank : Rank.values()) {
+                                Component prefix = StringUtility.parseString(rank.prefix());
+
+                                sendMessage(context, prefix);
+
+                            }
+                            return 1;
+                        })
+                )
+
+                // /rank remove
                 .then(literal("remove")
+                        // /rank remove <rank>
                         .then(RequiredArgumentBuilder.<CommandSourceStack, String>argument("ранг", StringArgumentType.word())
                                 .suggests(this::suggestRanks)
                                 .executes(context -> {

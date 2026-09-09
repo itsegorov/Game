@@ -6,25 +6,26 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface EconomyService {
 
-    double getBalance(@NotNull EconomyPlayer player, @NotNull Currency currency);
+    CompletableFuture<Optional<EconomyPlayer>> find(@NotNull UUID uniqueId);
 
-    void setBalance(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
+    CompletableFuture<Optional<EconomyPlayer>> find(@NotNull String name);
 
-    boolean hasAmount(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
+    CompletableFuture<Double> getBalance(@NotNull EconomyPlayer player, @NotNull Currency currency);
 
-    void deposit(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
+    CompletableFuture<Void> setBalance(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
 
-    void withdraw(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
+    CompletableFuture<Boolean> hasAmount(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
 
-    boolean transfer(@NotNull EconomyPlayer from, @NotNull EconomyPlayer to, @NotNull Currency currency, double amount);
+    CompletableFuture<Void> deposit(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
 
-    void createAccount(@NotNull EconomyPlayer player);
+    CompletableFuture<Void> withdraw(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount);
 
-    @NotNull Optional<EconomyPlayer> find(@NotNull UUID uniqueId);
+    CompletableFuture<Boolean> transfer(@NotNull EconomyPlayer from, @NotNull EconomyPlayer to,
+                                        @NotNull Currency currency, double amount);
 
-    @NotNull Optional<EconomyPlayer> find(@NotNull String name);
-
+    CompletableFuture<Void> createAccount(@NotNull EconomyPlayer player);
 }

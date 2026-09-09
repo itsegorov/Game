@@ -22,12 +22,10 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
     private final JavaPlugin plugin;
     private final HikariConnectionPool connectionPool;
     private final Map<Rank, List<PlayerRank>> rankIndex = new ConcurrentHashMap<>();
-    private final boolean isMySQL;
 
     public PlayerRankRepositoryImpl(@NotNull JavaPlugin plugin, @NotNull HikariConnectionPool connectionPool) {
         this.plugin = plugin;
         this.connectionPool = connectionPool;
-        this.isMySQL = connectionPool instanceof MySQLConnectionPool;
 
         createTableIfNotExists();
         scheduleExpiredRanksCleanup();
@@ -35,27 +33,17 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
     }
 
     private void createTableIfNotExists() {
-        String sql;
-        if (isMySQL) {
-            sql = "CREATE TABLE IF NOT EXISTS player_ranks (" +
-                    "uuid CHAR(36) PRIMARY KEY, " +
-                    "`rank` VARCHAR(32) NOT NULL, " +
-                    "expire_time BIGINT, " +
-                    "username VARCHAR(16), " +
-                    "last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                    ")";
-        } else {
-            sql = "CREATE TABLE IF NOT EXISTS player_ranks (" +
-                    "uuid CHAR(36) PRIMARY KEY, " +
-                    "`rank` VARCHAR(32) NOT NULL, " +
-                    "expire_time BIGINT, " +
-                    "username VARCHAR(16), " +
-                    "last_updated DATETIME DEFAULT CURRENT_TIMESTAMP" +
-                    ")";
-        }
+        String sql = "CREATE TABLE IF NOT EXISTS player_ranks (" +
+                "uuid TEXT PRIMARY KEY, " +
+                "rank TEXT NOT NULL, " +
+                "expire_time INTEGER, " +
+                "username TEXT, " +
+                "last_updated DATETIME DEFAULT CURRENT_TIMESTAMP" +
+                ")";
 
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
+
             statement.execute(sql);
 
             statement.execute("CREATE INDEX IF NOT EXISTS idx_rank ON player_ranks(rank)");
@@ -101,10 +89,11 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
             }
         }
 
-        String sql = "SELECT `rank`, expire_time, username FROM player_ranks WHERE uuid = ?";
+        String sql = "SELECT rank, expire_time, username FROM player_ranks WHERE uuid = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, uuid.toString());
             ResultSet resultSet = statement.executeQuery();
 
@@ -125,6 +114,7 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
             }
 
             return Optional.empty();
+
         } catch (SQLException exception) {
             throw new RuntimeException("Failed to fetch player rank", exception);
         }
@@ -140,11 +130,12 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
             }
         }
 
-        String sql = "SELECT uuid, `rank`, expire_time FROM player_ranks WHERE username = ? " +
+        String sql = "SELECT uuid, rank, expire_time FROM player_ranks WHERE username = ? " +
                 "ORDER BY last_updated DESC LIMIT 1";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
 
@@ -164,6 +155,7 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
             }
 
             return Optional.empty();
+
         } catch (SQLException exception) {
             throw new RuntimeException("Failed to fetch player rank by username", exception);
         }
@@ -171,26 +163,22 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
 
     @Override
     public void save(@NotNull UUID uuid, @NotNull Rank rank, @Nullable Long expireTime, @Nullable String username) {
-        String sql;
-        if (isMySQL) {
-            sql = "INSERT INTO player_ranks (uuid, `rank`, expire_time, username) VALUES (?, ?, ?, ?) " +
-                    "ON DUPLICATE KEY UPDATE `rank` = VALUES(`rank`), expire_time = VALUES(expire_time), " +
-                    "username = VALUES(username)";
-        } else {
-            sql = "INSERT INTO player_ranks (uuid, `rank`, expire_time, username) VALUES (?, ?, ?, ?) " +
-                    "ON CONFLICT(uuid) DO UPDATE SET `rank` = excluded.`rank`, " +
-                    "expire_time = excluded.expire_time, username = excluded.username";
-        }
+        String sql = "INSERT INTO player_ranks (uuid, rank, expire_time, username) VALUES (?, ?, ?, ?) " +
+                "ON CONFLICT(uuid) DO UPDATE SET " +
+                "rank = excluded.rank, " +
+                "expire_time = excluded.expire_time, " +
+                "username = excluded.username";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, uuid.toString());
             statement.setString(2, rank.id());
 
             if (expireTime != null) {
                 statement.setLong(3, expireTime);
             } else {
-                statement.setNull(3, Types.BIGINT);
+                statement.setNull(3, Types.INTEGER);
             }
 
             statement.setString(4, username);
@@ -215,6 +203,7 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, uuid.toString());
             statement.executeUpdate();
 
@@ -229,16 +218,17 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
 
     @Override
     public int updateAllByRank(@NotNull Rank fromRank, @NotNull Rank toRank, @Nullable Long newExpireTime) {
-        String sql = "UPDATE player_ranks SET `rank` = ?, expire_time = ? WHERE `rank` = ?";
+        String sql = "UPDATE player_ranks SET rank = ?, expire_time = ? WHERE rank = ?";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, toRank.id());
 
             if (newExpireTime != null) {
                 statement.setLong(2, newExpireTime);
             } else {
-                statement.setNull(2, Types.BIGINT);
+                statement.setNull(2, Types.INTEGER);
             }
 
             statement.setString(3, fromRank.id());
@@ -274,6 +264,7 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setLong(1, System.currentTimeMillis());
             int deleted = statement.executeUpdate();
 
@@ -294,6 +285,7 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             int deleted = statement.executeUpdate();
 
             if (deleted > 0) {
@@ -309,10 +301,11 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
 
     @Override
     public int resetAllTemporaryToDefault(@NotNull Rank defaultRank) {
-        String sql = "UPDATE player_ranks SET `rank` = ?, expire_time = NULL WHERE expire_time IS NOT NULL";
+        String sql = "UPDATE player_ranks SET rank = ?, expire_time = NULL WHERE expire_time IS NOT NULL";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setString(1, defaultRank.id());
             int updated = statement.executeUpdate();
 
@@ -342,8 +335,8 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
 
     @Override
     public @NotNull List<PlayerRank> findAllTemporary() {
-        String sql = "SELECT uuid, `rank`, expire_time, username FROM player_ranks WHERE expire_time IS NOT NULL";
         List<PlayerRank> result = new ArrayList<>();
+        String sql = "SELECT uuid, rank, expire_time, username FROM player_ranks WHERE expire_time IS NOT NULL";
 
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement();
@@ -368,7 +361,7 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
     @Override
     public @NotNull List<PlayerRank> findAll() {
         List<PlayerRank> result = new ArrayList<>();
-        String sql = "SELECT uuid, `rank`, expire_time, username FROM player_ranks";
+        String sql = "SELECT uuid, rank, expire_time, username FROM player_ranks";
 
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement();
@@ -396,7 +389,7 @@ public class PlayerRankRepositoryImpl implements PlayerRankRepository {
     }
 
     @Override
-    public @NotNull java.util.Map<Rank, Integer> getRankStatistics() {
+    public @NotNull Map<Rank, Integer> getRankStatistics() {
         Map<Rank, Integer> stats = new LinkedHashMap<>();
 
         for (Map.Entry<Rank, List<PlayerRank>> entry : rankIndex.entrySet()) {

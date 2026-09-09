@@ -25,24 +25,19 @@ public class GameModeCommand extends AbstractCommand {
         MODES.put("1", GameMode.CREATIVE);
         MODES.put("2", GameMode.ADVENTURE);
         MODES.put("3", GameMode.SPECTATOR);
-        MODES.put("survival", GameMode.SURVIVAL);
-        MODES.put("creative", GameMode.CREATIVE);
-        MODES.put("adventure", GameMode.ADVENTURE);
-        MODES.put("spectator", GameMode.SPECTATOR);
     }
 
     public GameModeCommand() {
         super("gm", "Меняет режим игры", "gamemode");
-        withPermission("fourcube.command.gamemode");
+        withPermission("command.gamemode");
     }
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> build() {
         return withStandardRequirements(LiteralArgumentBuilder.<CommandSourceStack>literal(getName())
-                .requires(hasPermission("fourcube.command.gamemode"))
-                .executes(this::sendUsage)
+                .requires(hasPermission("command.gamemode"))
                 .then(argument("режим", StringArgumentType.word())
-                        .suggests(suggestFromList("survival", "creative", "adventure", "spectator", "s", "c", "a", "sp"))
+                        .suggests(suggestFromList( "s", "c", "a", "sp"))
                         .executes(context -> {
                             Player player = getOptionalPlayer(context).orElseThrow();
                             String modeStr = getString(context, "режим");
@@ -60,7 +55,7 @@ public class GameModeCommand extends AbstractCommand {
                         })
                         .then(RequiredArgumentBuilder.<CommandSourceStack, Player> argument("игрок", ArgumentTypes.onlinePlayer())
                                 .suggests(suggestPlayers())
-                                .requires(anyPermission("fourcube.command.gamemode.other", "fourcube.command.gamemode.*"))
+                                .requires(anyPermission("command.gamemode.other", "command.gamemode.*"))
                                 .executes(context -> {
                                     Player target = getPlayer(context, "игрок");
                                     String modeStr = getString(context, "режим");
@@ -84,20 +79,5 @@ public class GameModeCommand extends AbstractCommand {
                         )
                 )
         );
-    }
-
-    private int sendUsage(CommandContext<CommandSourceStack> context) {
-        Component usage = Component.text()
-                .append(Component.text("Использование команды /gm:\n", NamedTextColor.GOLD, TextDecoration.BOLD))
-                .append(Component.text("  /gm <режим>", NamedTextColor.YELLOW))
-                .append(Component.text(" - изменить свой режим\n", NamedTextColor.GRAY))
-                .append(Component.text("  /gm <режим> <игрок>", NamedTextColor.YELLOW))
-                .append(Component.text(" - изменить режим игрока\n", NamedTextColor.GRAY))
-                .append(Component.text("\nДоступные режимы: ", NamedTextColor.GREEN))
-                .append(Component.text("survival (s/0), creative (c/1), adventure (a/2), spectator (sp/3)", NamedTextColor.AQUA))
-                .build();
-
-        context.getSource().getSender().sendMessage(usage);
-        return 1;
     }
 }

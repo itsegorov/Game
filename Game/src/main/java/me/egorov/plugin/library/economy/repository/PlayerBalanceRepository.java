@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface PlayerBalanceRepository {
     
     void save(@NotNull PlayerBalance balance);
-    
+
     @NotNull Optional<PlayerBalance> findByPlayerAndCurrency(@NotNull EconomyPlayer player, @NotNull Currency currency);
     
 }

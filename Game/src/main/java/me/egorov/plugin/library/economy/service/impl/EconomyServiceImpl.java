@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public final class EconomyServiceImpl implements EconomyService {
 
@@ -23,81 +24,106 @@ public final class EconomyServiceImpl implements EconomyService {
     }
 
     @Override
-    public double getBalance(@NotNull EconomyPlayer player, @NotNull Currency currency) {
-        return balanceRepository.findByPlayerAndCurrency(player, currency)
-                .map(PlayerBalance::value)
-                .orElse(0.0);
+    public CompletableFuture<Optional<EconomyPlayer>> find(@NotNull UUID uniqueId) {
+        return CompletableFuture.supplyAsync(() -> playerRepository.findByUuid(uniqueId));
     }
 
     @Override
-    public void setBalance(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative");
-        }
-
-        PlayerBalance balance = new PlayerBalance(player, currency, amount);
-        balanceRepository.save(balance);
+    public CompletableFuture<Optional<EconomyPlayer>> find(@NotNull String name) {
+        return CompletableFuture.supplyAsync(() -> playerRepository.findByUsername(name));
     }
 
     @Override
-    public boolean hasAmount(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
-        return getBalance(player, currency) >= amount;
+    public CompletableFuture<Double> getBalance(@NotNull EconomyPlayer player, @NotNull Currency currency) {
+        return CompletableFuture.supplyAsync(() ->
+                balanceRepository.findByPlayerAndCurrency(player, currency)
+                        .map(PlayerBalance::value)
+                        .orElse(0.0)
+        );
     }
 
     @Override
-    public void deposit(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Deposit amount must be positive");
-        }
-
-        double currentBalance = getBalance(player, currency);
-        setBalance(player, currency, currentBalance + amount);
+    public CompletableFuture<Void> setBalance(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
+        return CompletableFuture.runAsync(() -> {
+            if (amount < 0) {
+                throw new IllegalArgumentException("Balance cannot be negative");
+            }
+            PlayerBalance balance = new PlayerBalance(player, currency, amount);
+            balanceRepository.save(balance);
+        });
     }
 
     @Override
-    public void withdraw(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Withdraw amount must be positive");
-        }
-
-        if (!hasAmount(player, currency, amount)) {
-            throw new IllegalStateException("Insufficient funds");
-        }
-
-        double currentBalance = getBalance(player, currency);
-        setBalance(player, currency, currentBalance - amount);
+    public CompletableFuture<Boolean> hasAmount(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
+        return getBalance(player, currency).thenApply(balance -> balance >= amount);
     }
 
     @Override
-    public boolean transfer(@NotNull EconomyPlayer from, @NotNull EconomyPlayer to, @NotNull Currency currency,
-                            double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Transfer amount must be positive");
-        }
+    public CompletableFuture<Void> deposit(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
+        return CompletableFuture.runAsync(() -> {
+            if (amount <= 0) {
+                throw new IllegalArgumentException("Deposit amount must be positive");
+            }
 
-        if (!hasAmount(from, currency, amount)) {
-            return false;
-        }
+            double currentBalance = balanceRepository.findByPlayerAndCurrency(player, currency)
+                    .map(PlayerBalance::value)
+                    .orElse(0.0);
 
-        withdraw(from, currency, amount);
-        deposit(to, currency, amount);
-
-        return true;
+            PlayerBalance newBalance = new PlayerBalance(player, currency, currentBalance + amount);
+            balanceRepository.save(newBalance);
+        });
     }
 
     @Override
-    public void createAccount(@NotNull EconomyPlayer player) {
-        playerRepository.save(player);
+    public CompletableFuture<Void> withdraw(@NotNull EconomyPlayer player, @NotNull Currency currency, double amount) {
+        return CompletableFuture.runAsync(() -> {
+            if (amount <= 0) {
+                throw new IllegalArgumentException("Withdraw amount must be positive");
+            }
+
+            double currentBalance = balanceRepository.findByPlayerAndCurrency(player, currency)
+                    .map(PlayerBalance::value)
+                    .orElse(0.0);
+
+            if (currentBalance < amount) {
+                throw new IllegalStateException("Insufficient funds");
+            }
+
+            PlayerBalance newBalance = new PlayerBalance(player, currency, currentBalance - amount);
+            balanceRepository.save(newBalance);
+        });
     }
 
     @Override
-    public @NotNull Optional<EconomyPlayer> find(@NotNull UUID uniqueId) {
-        return playerRepository.findByUuid(uniqueId);
+    public CompletableFuture<Boolean> transfer(@NotNull EconomyPlayer from, @NotNull EconomyPlayer to,
+                                               @NotNull Currency currency, double amount) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (amount <= 0) {
+                throw new IllegalArgumentException("Transfer amount must be positive");
+            }
+
+            double fromBalance = balanceRepository.findByPlayerAndCurrency(from, currency)
+                    .map(PlayerBalance::value)
+                    .orElse(0.0);
+
+            if (fromBalance < amount) {
+                return false;
+            }
+
+            double toBalance = balanceRepository.findByPlayerAndCurrency(to, currency)
+                    .map(PlayerBalance::value)
+                    .orElse(0.0);
+
+            balanceRepository.save(new PlayerBalance(from, currency, fromBalance - amount));
+            balanceRepository.save(new PlayerBalance(to, currency, toBalance + amount));
+
+            return true;
+        });
     }
 
     @Override
-    public @NotNull Optional<EconomyPlayer> find(@NotNull String name) {
-        return playerRepository.findByUsername(name);
+    public CompletableFuture<Void> createAccount(@NotNull EconomyPlayer player) {
+        return CompletableFuture.runAsync(() -> playerRepository.save(player));
     }
 
 }

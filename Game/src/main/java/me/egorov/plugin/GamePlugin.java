@@ -6,9 +6,6 @@ import me.egorov.plugin.library.command.registrar.CommandRegistrar;
 import me.egorov.plugin.library.configuration.Messages;
 import me.egorov.plugin.library.economy.Economy;
 import me.egorov.plugin.library.economy.listener.EconomyPlayerListener;
-import me.egorov.plugin.library.inventory.listener.MenuListener;
-import me.egorov.plugin.library.inventory.session.MenuSession;
-import me.egorov.plugin.library.inventory.session.PaginatedSession;
 import me.egorov.plugin.library.rank.Ranks;
 import me.egorov.plugin.library.rank.listener.RanksPlayerListener;
 import me.egorov.plugin.library.rank.service.PlayerRankService;
@@ -40,7 +37,6 @@ public class GamePlugin extends JavaPlugin {
 
         messages = new Messages(getConfig().getConfigurationSection("Messages"));
 
-        getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(rankManager), this);
         getServer().getPluginManager().registerEvents(new RanksPlayerListener(ranks.service()), this);
         getServer().getPluginManager().registerEvents(new EconomyPlayerListener(economy.service()), this);
@@ -48,6 +44,7 @@ public class GamePlugin extends JavaPlugin {
         commandRegistrar = new CommandRegistrar(this, rankService);
         commandRegistrar.register(
                 new GameModeCommand(),
+                new EconomyCommand(economy.service()),
                 new RankCommand()
         );
         commandRegistrar.registerAll();
@@ -64,8 +61,6 @@ public class GamePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        MenuSession.clearAll();
-        PaginatedSession.clearAll();
         if (ranks != null) {
             ranks.shutdown();
         }
